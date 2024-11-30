@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-
   final String title;
 
   @override
@@ -35,44 +34,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   File? _image;
   final ImagePicker picker = ImagePicker();
 
-    chooseImages() async {
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      if(image != null){
-       setState(() {
-          _image = File(image.path);
-       });
-      }
+  chooseImages() async {
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _image = File(image.path);
+      });
+    }
   }
 
-  captureImages(){
-
+  captureImages() async {
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      setState(() {
+        _image = File(image.path);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
         title: Text(widget.title),
       ),
       body: Center(
-        
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-           _image !=null? Image.file(_image!,height: 200.0,width: 200.0,) :Icon(Icons.image,size: 150,),
-            ElevatedButton(onPressed: () {
-              chooseImages();
-            },onLongPress: () {
-              captureImages();
-            }, child: Text("Choose or Capture"))
+            _image != null
+                ? Image.file(
+                    _image!,
+                    height: 200.0,
+                    width: 200.0,
+                  )
+                : Icon(
+                    Icons.image,
+                    size: 150,
+                  ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                textStyle: TextStyle(
+                  fontSize: 20.0,
+                )
+              ),
+                onPressed: () {
+                  chooseImages();
+                },
+                onLongPress: () {
+                  captureImages();
+                },
+                child: Text("Choose or Capture",style: TextStyle(color: Colors.white),),
+                )
           ],
         ),
       ),
